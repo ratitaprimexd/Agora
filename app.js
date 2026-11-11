@@ -875,6 +875,28 @@ document.addEventListener('submit', e => {
   }
 });
 
+/* ---------- música: reproductor oficial de YouTube, sigue sonando al navegar ---------- */
+const CANCION = { id: 'RlV-ZFyVH3c', titulo: 'Beast of Burden', artista: 'The Rolling Stones' };
+function musicaCerrada() {
+  $('#musica').innerHTML = `<button class="music-btn" data-act="musica-abrir" aria-label="Escuchar ${CANCION.titulo}">🎵 <span>${CANCION.titulo}</span></button>`;
+}
+function musicaAbierta() {
+  const src = `https://www.youtube-nocookie.com/embed/${CANCION.id}?autoplay=1&loop=1&playlist=${CANCION.id}&rel=0&playsinline=1`;
+  $('#musica').innerHTML = `<div class="music-card">
+    <div class="music-head"><span>🎵 <b>${CANCION.titulo}</b><br><small>${CANCION.artista}</small></span>
+      <span class="music-ctrl"><button class="icon-btn" data-act="musica-min" aria-label="Minimizar o mostrar el reproductor">▾</button>
+      <button class="icon-btn" data-act="musica-cerrar" aria-label="Cerrar música">✕</button></span></div>
+    <iframe src="${src}" title="${CANCION.titulo} · ${CANCION.artista}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+  </div>`;
+}
+musicaCerrada();
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act^="musica-"]'); if (!b) return;
+  if (b.dataset.act === 'musica-abrir') musicaAbierta();
+  else if (b.dataset.act === 'musica-min') { const c = $('.music-card'); c.classList.toggle('min'); b.textContent = c.classList.contains('min') ? '▴' : '▾'; }
+  else musicaCerrada();
+});
+
 /* ---------- burbujas, PWA e inicio ---------- */
 (function burbujas() {
   const c = $('.bubbles'); const r = rng('burbujas');
